@@ -2,6 +2,7 @@ package links
 
 import (
 	"context"
+	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"time"
 
@@ -33,18 +34,12 @@ func (r *Repository) Create(ctx context.Context, req CreateReq) (database.Link, 
 	l.CreatedAt = time.Now()
 	l.UpdatedAt = l.CreatedAt
 
-	_, err := r.db.Collection(collection).InsertOne(ctx, bson.M{
-		"id":         l.ID,
-		"title":      l.Title,
-		"url":        l.URL,
-		"images":     l.Images,
-		"tags":       l.Tags,
-		"userID":     l.UserID,
-		"created_at": l.CreatedAt,
-		"updated_at": l.UpdatedAt,
-	})
+	_, err := r.db.Collection(collection).InsertOne(ctx, l)
+	if err != nil {
+		return l, fmt.Errorf("links InsertOne: %w", err)
+	}
 
-	return l, err
+	return l, nil
 }
 
 func (r *Repository) FindByUserAndURL(ctx context.Context, link, userID string) (database.Link, error) {
@@ -55,7 +50,11 @@ func (r *Repository) FindByUserAndURL(ctx context.Context, link, userID string) 
 		"userID": userID,
 	}).Decode(&l)
 
-	return l, err
+	if err != nil {
+		return l, fmt.Errorf("links Decode: %w", err)
+	}
+
+	return l, nil
 }
 
 func (r *Repository) FindByCriteria(ctx context.Context, criteria Criteria) ([]database.Link, error) {
