@@ -19,7 +19,7 @@ type LinksDBConfig struct {
 type MongoConfig struct {
 	Name           string        `env:"NAME,default=links"`
 	Host           string        `env:"HOST,default=127.0.0.1"`
-	Port           int           `env:"PORT,default=27017"`
+	Port           int           `env:"PORT,default=27019"`
 	User           string        `env:"USER,default=mongo"`
 	Password       string        `env:"USER,default=mongo"`
 	MinPoolSize    uint64        `env:"MIN_POOL_SIZE,default=5"`
@@ -36,10 +36,10 @@ type UsersDBConfig struct {
 }
 
 type PostgresConfig struct {
-	Name         string        `env:"NAME,default=users" json:",omitempty"`
+	Name         string        `env:"NAME,default=manager" json:",omitempty"`
 	User         string        `env:"USER,default=postgres" json:",omitempty"`
 	Host         string        `env:"HOST,default=localhost" json:",omitempty"`
-	Port         int           `env:"PORT,default=5432" json:",omitempty"`
+	Port         int           `env:"PORT,default=5435" json:",omitempty"`
 	SSLMode      string        `env:"SSLMODE,default=disable" json:",omitempty"`
 	ConnTimeout  int           `env:"CONN_TIMEOUT,default=5" json:",omitempty"`
 	Password     string        `env:"PASSWORD,default=postgres" json:"-"`
