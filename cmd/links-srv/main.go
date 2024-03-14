@@ -52,6 +52,7 @@ func runMain(ctx context.Context) error {
 		},
 	)
 	if err != nil {
+		fmt.Println(3)
 		return err
 	}
 	fmt.Println(create, found, foundBy)

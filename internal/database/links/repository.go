@@ -2,6 +2,8 @@ package links
 
 import (
 	"context"
+	"fmt"
+	"go.mongodb.org/mongo-driver/bson"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -22,13 +24,36 @@ type Repository struct {
 
 func (r *Repository) Create(ctx context.Context, req CreateReq) (database.Link, error) {
 	var l database.Link
-	// implement me
+
+	l.ID = req.ID
+	l.Title = req.Title
+	l.URL = req.URL
+	l.Images = req.Images
+	l.Tags = req.Tags
+	l.UserID = req.UserID
+	l.CreatedAt = time.Now()
+	l.UpdatedAt = l.CreatedAt
+
+	_, err := r.db.Collection(collection).InsertOne(ctx, l)
+	if err != nil {
+		return l, fmt.Errorf("links InsertOne: %w", err)
+	}
+
 	return l, nil
 }
 
 func (r *Repository) FindByUserAndURL(ctx context.Context, link, userID string) (database.Link, error) {
 	var l database.Link
-	// implement me
+
+	err := r.db.Collection(collection).FindOne(ctx, bson.M{
+		"url":    link,
+		"userID": userID,
+	}).Decode(&l)
+
+	if err != nil {
+		return l, fmt.Errorf("links Decode: %w", err)
+	}
+
 	return l, nil
 }
 
